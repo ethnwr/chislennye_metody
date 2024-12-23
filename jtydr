@@ -10,6 +10,7 @@ double f(double x) {
 double df(double x) {
   return 3 * pow(x, 2) - 1;
 }
+// Метод половинного деления
 double bisectionMethod(double a, double b, double eps, function<double(double)> func) {
   if (func(a) * func(b) > 0) {
     cout << "Нет корня на заданном интервале" << endl;
