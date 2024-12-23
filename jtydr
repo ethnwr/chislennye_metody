@@ -1,0 +1,89 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+#include <functional>
+
+using namespace std;
+double f(double x) {
+  return pow(x, 3) - x - 2;
+}
+double df(double x) {
+  return 3 * pow(x, 2) - 1;
+}
+double bisectionMethod(double a, double b, double eps, function<double(double)> func) {
+  if (func(a) * func(b) > 0) {
+    cout << "Нет корня на заданном интервале" << endl;
+    return NAN;
+  }
+
+    int iterations = 0;
+  while (abs(b - a) > eps) {
+      iterations++;
+    double c = (a + b) / 2;
+    if (func(c) == 0) {
+      return c;
+    } else if (func(a) * func(c) < 0) {
+      b = c;
+    } else {
+      a = c;
+    }
+    if(iterations > 1000) {
+        cout << "Превышено максимальное количество итераций" << endl;
+        return NAN;
+    }
+  }
+  return (a + b) / 2;
+}
+
+// Метод простых итераций
+double simpleIterationMethod(double x0, double eps, function<double(double)> phi) {
+    double x = x0;
+    double prevX;
+    int iterations = 0;
+    do {
+        iterations++;
+        prevX = x;
+        x = phi(prevX);
+
+        if(iterations > 1000) {
+          cout << "Превышено максимальное количество итераций" << endl;
+          return NAN;
+        }
+    } while (abs(x - prevX) > eps);
+    return x;
+}
+
+double phi(double x) {
+  return x - f(x) / df(x); 
+}
+
+int main() {
+  // Пример использования метода половинного деления
+  double a = 1.0; // Начало интервала
+  double b = 2.0; // Конец интервала
+  double eps = 0.0001; // Точность
+
+  cout << "Метод половинного деления:" << endl;
+  double rootBisection = bisectionMethod(a, b, eps, f);
+  if (!isnan(rootBisection)) {
+    cout << "Приближенное значение корня: " << fixed << setprecision(6) << rootBisection << endl;
+  }
+
+    // Пример использования метода простых итераций
+  double x0 = 1.5; // Начальное приближение
+  cout << "\nМетод простых итераций:" << endl;
+  double rootSimpleIteration = simpleIterationMethod(x0, eps, phi);
+  if (!isnan(rootSimpleIteration)) {
+    cout << "Приближенное значение корня: " << fixed << setprecision(6) << rootSimpleIteration << endl;
+  }
+
+    // Пример с другой функцией и интервалом
+    function<double(double)> func2 = [](double x) { return x * x - 4; };
+    cout << "\nМетод половинного деления (пример 2):" << endl;
+    double root2 = bisectionMethod(0, 3, 0.0001, func2);
+    if (!isnan(root2)) {
+      cout << "Приближенное значение корня: " << fixed << setprecision(6) << root2 << endl;
+    }
+  
+  return 0;
+}
