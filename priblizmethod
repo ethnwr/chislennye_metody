@@ -1,0 +1,65 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+#include <limits>
+
+using namespace std;
+
+// Функция, для которой ищем корень
+double f(double x) {
+  // Пример: x^3 - 2x - 5
+  return pow(x, 3) - 2 * x - 5; 
+}
+
+// Метод хорд
+double chordMethod(double a, double b, double eps, int maxIter) {
+  double x, x_prev = a;
+  int iter = 0;
+
+  if (f(a) * f(b) >= 0) {
+    cout << "На данном интервале нет корней или есть четное число корней." << endl;
+    return numeric_limits<double>::quiet_NaN(); // Возвращаем NaN, чтобы сигнализировать об ошибке
+  }
+
+  do {
+    x = (a * f(b) - b * f(a)) / (f(b) - f(a));
+    
+    if (f(a) * f(x) < 0) {
+      b = x;
+    } else {
+      a = x;
+    }
+
+    iter++;
+    if (iter > maxIter) {
+      cout << "Превышено максимальное количество итераций." << endl;
+      return numeric_limits<double>::quiet_NaN(); 
+    }
+  } while (fabs(x - x_prev) > eps); 
+
+  return x;
+}
+
+int main() {
+  double a, b, eps;
+  int maxIter;
+
+  cout << "Введите левую границу интервала (a): ";
+  cin >> a;
+  cout << "Введите правую границу интервала (b): ";
+  cin >> b;
+  cout << "Введите точность (eps): ";
+  cin >> eps;
+  cout << "Введите максимальное количество итераций: ";
+  cin >> maxIter;
+
+  double root = chordMethod(a, b, eps, maxIter);
+
+  if (!isnan(root)) {
+    cout << "Найденный корень: " << fixed << setprecision(10) << root << endl;
+    cout << "Значение функции в корне: " << fixed << setprecision(10) << f(root) << endl;
+  }
+
+
+  return 0;
+}
