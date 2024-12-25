@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+double f(double x, double y) {
+  return x * x + y; // Замените на фактическое выражение вашей функции
+}
+
+int main() {
+  double x, y, h, b;
+  // Ввод x, y, h и b.
+  cout << "Введите начальное значение x: ";
+  cin >> x;
+  cout << "Введите начальное значение y: ";
+  cin >> y;
+  cout << "Введите размер шага h: ";
+  cin >> h;
+  cout << "Введите конечное значение x (b): ";
+  cin >> b;
+  // Цикл метода Эйлера.
+  while (x <= b) {
+    y = y + h * f(x, y); // Расчет нового y по методу Эйлера
+    x = x + h;          // Увеличение x на шаг h
+    cout << "y: " << y << endl; // Вывод текущего значения y
+  }
+  return 0;
+}
